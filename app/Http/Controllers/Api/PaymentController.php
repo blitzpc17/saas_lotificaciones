@@ -13,7 +13,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Payment::with('contract')->orderBy('payment_date', 'desc')->get());
     }
 
     /**
@@ -21,7 +21,17 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'contract_id' => 'required|exists:contracts,id',
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+            'payment_method' => 'required|string|max:50',
+            'reference' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
+        $payment = Payment::create($validated);
+        return response()->json($payment, 201);
     }
 
     /**
@@ -29,7 +39,7 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        return response()->json($payment->load('contract'));
     }
 
     /**
@@ -37,7 +47,17 @@ class PaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
-        //
+        $validated = $request->validate([
+            'contract_id' => 'required|exists:contracts,id',
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+            'payment_method' => 'required|string|max:50',
+            'reference' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
+        $payment->update($validated);
+        return response()->json($payment);
     }
 
     /**
@@ -45,6 +65,7 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
-        //
+        $payment->delete();
+        return response()->json(['message' => 'Eliminado exitosamente']);
     }
 }

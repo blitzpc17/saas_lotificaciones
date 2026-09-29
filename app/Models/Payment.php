@@ -11,15 +11,21 @@ class Payment extends Model
 
     protected $fillable = [
         'contract_id',
-        'concept',
+        'installment_id',
         'amount',
-        'due_date',
-        'paid_date',
-        'status',
+        'payment_date',
+        'payment_method',
+        'reference',
+        'notes',
     ];
 
     public function contract()
     {
         return $this->belongsTo(Contract::class);
+    }
+
+    public function installment()
+    {
+        return $this->belongsTo(Installment::class);
     }
 }

@@ -35,4 +35,9 @@ class Contract extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function installments()
+    {
+        return $this->hasMany(Installment::class);
+    }
 }

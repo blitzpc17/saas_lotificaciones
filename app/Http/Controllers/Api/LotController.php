@@ -13,7 +13,7 @@ class LotController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Lot::with('development')->get());
     }
 
     /**
@@ -21,7 +21,17 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'development_id' => 'required|exists:developments,id',
+            'block' => 'required|string|max:50',
+            'lot_number' => 'required|string|max:50',
+            'area' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:available,reserved,sold',
+        ]);
+
+        $lot = Lot::create($validated);
+        return response()->json($lot, 201);
     }
 
     /**
@@ -29,7 +39,7 @@ class LotController extends Controller
      */
     public function show(Lot $lot)
     {
-        //
+        return response()->json($lot->load('development'));
     }
 
     /**
@@ -37,7 +47,17 @@ class LotController extends Controller
      */
     public function update(Request $request, Lot $lot)
     {
-        //
+        $validated = $request->validate([
+            'development_id' => 'required|exists:developments,id',
+            'block' => 'required|string|max:50',
+            'lot_number' => 'required|string|max:50',
+            'area' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:available,reserved,sold',
+        ]);
+
+        $lot->update($validated);
+        return response()->json($lot);
     }
 
     /**
@@ -45,6 +65,7 @@ class LotController extends Controller
      */
     public function destroy(Lot $lot)
     {
-        //
+        $lot->delete();
+        return response()->json(['message' => 'Eliminado exitosamente']);
     }
 }

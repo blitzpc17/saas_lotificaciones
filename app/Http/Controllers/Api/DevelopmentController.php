@@ -13,7 +13,7 @@ class DevelopmentController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Development::all());
     }
 
     /**
@@ -21,7 +21,15 @@ class DevelopmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'amenities' => 'nullable|string',
+        ]);
+
+        $development = Development::create($validated);
+        return response()->json($development, 201);
     }
 
     /**
@@ -29,7 +37,7 @@ class DevelopmentController extends Controller
      */
     public function show(Development $development)
     {
-        //
+        return response()->json($development->load('lots'));
     }
 
     /**
@@ -37,7 +45,15 @@ class DevelopmentController extends Controller
      */
     public function update(Request $request, Development $development)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'amenities' => 'nullable|string',
+        ]);
+
+        $development->update($validated);
+        return response()->json($development);
     }
 
     /**
@@ -45,6 +61,7 @@ class DevelopmentController extends Controller
      */
     public function destroy(Development $development)
     {
-        //
+        $development->delete();
+        return response()->json(['message' => 'Eliminado exitosamente']);
     }
 }
